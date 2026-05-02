@@ -1,15 +1,16 @@
 Java.perform(function() {
-    send("[NP] Script actif");
+    var Log = Java.use("android.util.Log");
+    Log.e("NP-HOOK", "Script actif");
 
     try {
         var Dialog = Java.use("android.app.Dialog");
         Dialog.show.implementation = function() {
             var t = ""; try { t = this.getTitle(); } catch(e) {}
             var c = ""; try { c = this.getClass().getName(); } catch(e) {}
-            send("[NP] Dialog titre=" + t + " classe=" + c);
+            Log.e("NP-HOOK", "Dialog titre=" + t + " classe=" + c);
             this.show();
         };
-    } catch(e) { send("[NP] err Dialog: " + e); }
+    } catch(e) { Log.e("NP-HOOK", "err Dialog: " + e); }
 
     try {
         Java.enumerateLoadedClasses({
@@ -20,11 +21,11 @@ Java.perform(function() {
                         l.indexOf("force") !== -1 || l.indexOf("version") !== -1 ||
                         l.indexOf("popup") !== -1 || l.indexOf("notice") !== -1 ||
                         l.indexOf("dialog") !== -1) {
-                        send("[NP] CLASSE: " + name);
+                        Log.e("NP-HOOK", "CLASSE: " + name);
                     }
                 }
             },
-            onComplete: function() { send("[NP] Scan fini"); }
+            onComplete: function() { Log.e("NP-HOOK", "Scan fini"); }
         });
-    } catch(e) { send("[NP] err scan: " + e); }
+    } catch(e) { Log.e("NP-HOOK", "err scan: " + e); }
 });
